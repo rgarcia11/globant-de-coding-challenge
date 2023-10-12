@@ -59,91 +59,96 @@ class Job(db.Model):
         return f"Employee(id={self.id}, job='{self.job}'"
 
 
-@app.route('/upload_employees', methods=['POST'])
-def upload_employees():
-    file = request.files['csv_file']
+def insert_to_db(sql, data):
+    try:
+        db.session.execute(sa.text(sql), params=data)
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": f"Failed to insert data: {str(e)}"})
+
+
+def handle_csv(data_structure, file, csv_header_row, batch_size, sql):
     if file:
         if file.filename.endswith('.csv'):
             csv_data = file.read().decode('utf-8').splitlines()
+            if csv_header_row:
+                csv_data = csv_data[1:]
+            data = []
             for row in csv_data:
                 values = row.split(',')
-                sql = """
-                INSERT INTO employees (id, name, datetime, department_id, job_id)
-                VALUES (:id, :name, :datetime, :department_id, :job_id);
-                """
-                data = {
-                    "id": values[0],
-                    "name": values[1],
-                    "datetime": values[2],
-                    "department_id": values[3],
-                    "job_id": values[4]
-                }
-                try:
-                    db.session.execute(sa.text(sql), params=data)
-                    db.session.commit()
-                except Exception as e:
-                    return jsonify({"error": f"Failed to insert data: {str(e)}"})
+                data_object = {}
+                for index, value in enumerate(data_structure):
+                    data_object[value] = values[index]
+                data.append(data_object)
+                if len(data) == batch_size:
+                    r = insert_to_db(sql, data)
+                    if r:
+                        return r
+                    data = []
+            if data:
+                r = insert_to_db(sql, data)
+                if r:
+                    return r
             return jsonify({"message": "File uploaded and data inserted successfully"})
         else:
             return jsonify({"error": "Please upload a CSV file"})
     else:
         return jsonify({"error": "No file selected"})
+
+
+@app.route('/upload_employees', methods=['POST'])
+def upload_employees():
+    file = request.files['csv_file']
+    csv_header_row = True if request.form['csv_header_row'].lower() == 'true' else False
+    try:
+        batch_size = int(request.form['batch_size'])
+        if batch_size > 1000:
+            jsonify({"error": "The maximum batch size is 1000"})
+    except ValueError:
+        batch_size = 1000
+    sql = """
+    INSERT INTO employees (id, name, datetime, department_id, job_id)
+    VALUES (:id, :name, :datetime, :department_id, :job_id);
+    """
+    data_structure = ["id", "name", "datetime", "department_id", "job_id"]
+    return handle_csv(data_structure, file, csv_header_row, batch_size, sql)
 
 
 @app.route('/upload_jobs', methods=['POST'])
 def upload_jobs():
     file = request.files['csv_file']
-    if file:
-        if file.filename.endswith('.csv'):
-            csv_data = file.read().decode('utf-8').splitlines()
-            for row in csv_data:
-                values = row.split(',')
-                sql = """
-                INSERT INTO jobs (id, job)
-                VALUES (:id, :job);
-                """
-                data = {
-                    "id": values[0],
-                    "job": values[1]
-                }
-                try:
-                    db.session.execute(sa.text(sql), params=data)
-                    db.session.commit()
-                except Exception as e:
-                    return jsonify({"error": f"Failed to insert data: {str(e)}"})
-            return jsonify({"message": "File uploaded and data inserted successfully"})
-        else:
-            return jsonify({"error": "Please upload a CSV file"})
-    else:
-        return jsonify({"error": "No file selected"})
+    csv_header_row = True if request.form['csv_header_row'].lower() == 'true' else False
+    try:
+        batch_size = int(request.form['batch_size'])
+        if batch_size > 1000:
+            jsonify({"error": "The maximum batch size is 1000"})
+    except ValueError:
+        batch_size = 1000
+    sql = """
+    INSERT INTO jobs (id, job)
+    VALUES (:id, :job);
+    """
+    data_structure = ["id", "job"]
+    return handle_csv(data_structure, file, csv_header_row, batch_size, sql)
 
 
 @app.route('/upload_departments', methods=['POST'])
 def upload_departments():
     file = request.files['csv_file']
-    if file:
-        if file.filename.endswith('.csv'):
-            csv_data = file.read().decode('utf-8').splitlines()
-            for row in csv_data:
-                values = row.split(',')
-                sql = """
-                INSERT INTO departments (id, department)
-                VALUES (:id, :department);
-                """
-                data = {
-                    "id": values[0],
-                    "department": values[1],
-                }
-                try:
-                    db.session.execute(sa.text(sql), params=data)
-                    db.session.commit()
-                except Exception as e:
-                    return jsonify({"error": f"Failed to insert data: {str(e)}"})
-            return jsonify({"message": "File uploaded and data inserted successfully"})
-        else:
-            return jsonify({"error": "Please upload a CSV file"})
-    else:
-        return jsonify({"error": "No file selected"})
+    csv_header_row = True if request.form['csv_header_row'].lower() == 'true' else False
+    try:
+        batch_size = int(request.form['batch_size'])
+        if batch_size > 1000:
+            jsonify({"error": "The maximum batch size is 1000"})
+    except ValueError:
+        batch_size = 1000
+    sql = """
+    INSERT INTO departments (id, department)
+    VALUES (:id, :department);
+    """
+    data_structure = ["id", "department"]
+    return handle_csv(data_structure, file, csv_header_row, batch_size, sql)
 
 
 if __name__ == '__main__':
