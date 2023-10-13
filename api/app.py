@@ -189,5 +189,38 @@ def employees_hired():
     return json.dumps(results)
 
 
+@app.route('/departments_over_hiring_mean', methods=['GET'])
+def departments_over_hiring_mean():
+    year = request.args.get("year")
+    error_message = "Failed to query database: {error_message}"
+    sql = """
+    WITH mean AS (
+      SELECT AVG(cnt) AS mean
+      FROM (
+        SELECT COUNT (*) AS cnt
+        FROM employees
+        GROUP BY department_id
+      )
+    ),
+    counts AS (
+      SELECT d.id, d.department, COUNT(*) AS hired
+      FROM employees e
+      LEFT JOIN departments d ON e.department_id = d.id
+      WHERE EXTRACT(year FROM datetime) = :year
+      GROUP BY d.id, d.department
+    )
+    SELECT counts.*
+    FROM counts counts
+    LEFT JOIN mean ON true
+    WHERE counts.hired > mean.mean;
+    """
+    data = {
+        "year": year
+    }
+    rows = run_query(sql, data, error_message)
+    results = [tuple(row) for row in rows]
+    return json.dumps(results)
+
+
 if __name__ == '__main__':
     app.run(debug=True)
