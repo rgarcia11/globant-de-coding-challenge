@@ -1,7 +1,7 @@
-from flask import Flask, request, jsonify
-import pandas as pd
-from flask_migrate import Migrate
+import json
 import sqlalchemy as sa
+from flask import Flask, request, jsonify
+from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
@@ -59,16 +59,27 @@ class Job(db.Model):
         return f"Employee(id={self.id}, job='{self.job}'"
 
 
-def insert_to_db(sql, data):
+def insert_to_db(sql, data, error_message):
     try:
         db.session.execute(sa.text(sql), params=data)
         db.session.commit()
     except Exception as e:
         db.session.rollback()
-        return jsonify({"error": f"Failed to insert data: {str(e)}"})
+        return jsonify({"error": error_message.format(error_message=e)})
+
+
+def run_query(sql, data, error_message):
+    try:
+        cur = db.session.execute(sa.text(sql), params=data)
+        return cur.fetchall()
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": error_message.format(error_message=e)})
+
 
 
 def handle_csv(data_structure, file, csv_header_row, batch_size, sql):
+    error_message = "Failed to insert data: {error_message}"
     if file:
         if file.filename.endswith('.csv'):
             csv_data = file.read().decode('utf-8').splitlines()
@@ -82,12 +93,12 @@ def handle_csv(data_structure, file, csv_header_row, batch_size, sql):
                     data_object[value] = values[index]
                 data.append(data_object)
                 if len(data) == batch_size:
-                    r = insert_to_db(sql, data)
+                    r = insert_to_db(sql, data, error_message)
                     if r:
                         return r
                     data = []
             if data:
-                r = insert_to_db(sql, data)
+                r = insert_to_db(sql, data, error_message)
                 if r:
                     return r
             return jsonify({"message": "File uploaded and data inserted successfully"})
@@ -149,6 +160,33 @@ def upload_departments():
     """
     data_structure = ["id", "department"]
     return handle_csv(data_structure, file, csv_header_row, batch_size, sql)
+
+
+@app.route('/employees_hired', methods=['GET'])
+def employees_hired():
+    year = request.args.get("year")
+    error_message = "Failed to query database: {error_message}"
+    sql = """
+    SELECT 
+      d.department, 
+      j.job, 
+      COUNT(*) FILTER (WHERE EXTRACT(quarter FROM datetime) = 1) AS Q1,
+      COUNT(*) FILTER (WHERE EXTRACT(quarter FROM datetime) = 2) AS Q2,
+      COUNT(*) FILTER (WHERE EXTRACT(quarter FROM datetime) = 3) AS Q3,
+      COUNT(*) FILTER (WHERE EXTRACT(quarter FROM datetime) = 4) AS Q4
+    FROM employees e 
+    LEFT JOIN departments d ON e.department_id = d.id 
+    LEFT JOIN jobs j ON e.job_id = j.id
+    WHERE EXTRACT(year FROM datetime) = :year
+    GROUP BY d.department, j.job
+    ORDER BY department ASC, job ASC;
+    """
+    data = {
+        "year": year
+    }
+    rows = run_query(sql, data, error_message)
+    results = [tuple(row) for row in rows]
+    return json.dumps(results)
 
 
 if __name__ == '__main__':
