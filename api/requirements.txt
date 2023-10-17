@@ -1,7 +1,8 @@
-Flask==3.0.0
-Flask-Migrate==3.1.0
-Flask-SQLAlchemy==3.1.1
-pandas==2.1.1
-psycopg2-binary==2.9.9
-SQLAlchemy==2.0.21
+Flask
+Flask-Migrate
+Flask-SQLAlchemy
+pandas
+psycopg2-binary
+pytest
+SQLAlchemy
 wheel

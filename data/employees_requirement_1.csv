@@ -1,31 +1,31 @@
 id,name,datetime,department_id,job_id
-4569,Andres Ramirez,15/01/2021 0:00,3,1
-4570,Isabella Fernandez,14/02/2021 0:00,3,1
-4571,Matias Silva,22/03/2021 0:00,3,1
-4572,Camila Lopez,9/07/2021 0:00,3,1
-4573,Eduardo Diaz,9/07/2021 0:00,3,1
-4574,Maria Rodriguez,23/07/2021 0:00,3,1
-4575,Daniel Perez,3/07/2021 0:00,3,1
-4576,Sofia Martinez,7/08/2021 0:00,3,1
-4577,Juan Torres,22/08/2021 0:00,3,1
-4578,Valentina Jimenez,10/08/2021 0:00,3,1
-4579,Felipe Castro,30/10/2021 0:00,3,1
-4580,Valeria Ramirez,21/11/2021 0:00,3,1
-4581,Carlos Herrera,12/11/2021 0:00,3,1
-4582,Javiera Gonzales,18/11/2021 0:00,3,1
-4583,Maximiliano Morales,20/11/2021 0:00,3,1
-4584,Catalina Soto,12/11/2021 0:00,3,1
-4585,Emiliano Vargas,3/11/2021 0:00,3,1
-4586,Josefa Medina,7/11/2021 0:00,3,1
-4587,Francisco Rios,15/11/2021 0:00,3,1
-4588,Daniela Cordero,4/11/2021 0:00,3,1
-4589,Lucas Guerrero,1/11/2021 0:00,3,1
-4590,Trinidad Rojas,28/02/2021 0:00,3,2
-4591,Antonio Vargas,8/03/2021 0:00,3,2
-4592,Mariana Silva,12/05/2021 0:00,3,2
-4593,Tomas Romero,18/11/2021 0:00,3,2
-4594,Isidora Paredes,15/12/2021 0:00,3,2
-4595,Agustin Munoz,9/04/2021 0:00,1,2
-4596,Maria Jesus Saez,22/08/2021 0:00,1,2
-4597,Cristobal Velasquez,1/08/2021 0:00,1,2
-4598,Florencia Olguin,29/09/2021 0:00,1,2
+4569,Andres Ramirez,2021-01-15T00:00:00Z,3,1
+4570,Isabella Fernandez,2021-02-14T00:00:00Z,3,1
+4571,Matias Silva,2021-03-22T00:00:00Z,3,1
+4572,Camila Lopez,2021-07-09T00:00:00Z,3,1
+4573,Eduardo Diaz,2021-07-09T00:00:00Z,3,1
+4574,Maria Rodriguez,2021-07-23T00:00:00Z,3,1
+4575,Daniel Perez,2021-07-03T00:00:00Z,3,1
+4576,Sofia Martinez,2021-08-07T00:00:00Z,3,1
+4577,Juan Torres,2021-08-22T00:00:00Z,3,1
+4578,Valentina Jimenez,2021-08-10T00:00:00Z,3,1
+4579,Felipe Castro,2021-10-30T00:00:00Z,3,1
+4580,Valeria Ramirez,2021-11-21T00:00:00Z,3,1
+4581,Carlos Herrera,2021-11-12T00:00:00Z,3,1
+4582,Javiera Gonzales,2021-11-18T00:00:00Z,3,1
+4583,Maximiliano Morales,2021-11-20T00:00:00Z,3,1
+4584,Catalina Soto,2021-11-12T00:00:00Z,3,1
+4585,Emiliano Vargas,2021-11-03T00:00:00Z,3,1
+4586,Josefa Medina,2021-11-07T00:00:00Z,3,1
+4587,Francisco Rios,2021-11-15T00:00:00Z,3,1
+4588,Daniela Cordero,2021-11-04T00:00:00Z,3,1
+4589,Lucas Guerrero,2021-11-01T00:00:00Z,3,1
+4590,Trinidad Rojas,2021-02-28T00:00:00Z,3,2
+4591,Antonio Vargas,2021-03-08T00:00:00Z,3,2
+4592,Mariana Silva,2021-05-12T00:00:00Z,3,2
+4593,Tomas Romero,2021-11-18T00:00:00Z,3,2
+4594,Isidora Paredes,2021-12-15T00:00:00Z,3,2
+4595,Agustin Munoz,2021-04-09T00:00:00Z,1,2
+4596,Maria Jesus Saez,2021-08-22T00:00:00Z,1,2
+4597,Cristobal Velasquez,2021-08-01T00:00:00Z,1,2
+4598,Florencia Olguin,2021-09-29T00:00:00Z,1,2
