@@ -1,11 +1,11 @@
 from datetime import datetime
 
 from .fixtures import setup, setup_employees
-from ..challenge_app.models.employee_model import Employee
+from api.challenge_app.models.employee_model import Employee
 
 
 def test_create_employee(setup_employees):
-    test_employee, app = setup_employees
+    _, app = setup_employees
     new_employee = Employee(
         name="Test Employee 1",
         datetime="2021-01-01T00:00:00Z",
