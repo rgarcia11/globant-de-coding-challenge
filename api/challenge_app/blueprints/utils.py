@@ -1,7 +1,7 @@
 import sqlalchemy as sa
 from flask import jsonify
 
-from api.challenge_app.app_factory import db
+from api.challenge_app.db_singleton import db
 
 
 def run_query(sql, data, error_message):

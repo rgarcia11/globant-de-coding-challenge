@@ -3,8 +3,8 @@ import json
 import sqlalchemy
 from flask import Blueprint, request, jsonify
 
-from api.challenge_app.app_factory import db
 from api.challenge_app.blueprints.utils import handle_csv, run_query
+from api.challenge_app.db_singleton import db
 from api.challenge_app.models.department_model import Department
 
 departments_bp = Blueprint('departments', __name__)

@@ -1,8 +1,8 @@
 import sqlalchemy
 from flask import Blueprint, request, jsonify
 
-from api.challenge_app.app_factory import db
 from api.challenge_app.blueprints.utils import handle_csv
+from api.challenge_app.db_singleton import db
 from api.challenge_app.models.job_model import Job
 
 jobs_bp = Blueprint('jobs', __name__)

@@ -1,4 +1,4 @@
-from api.challenge_app.app_factory import db
+from api.challenge_app.db_singleton import db
 
 
 class Job(db.Model):

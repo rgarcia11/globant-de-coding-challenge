@@ -4,8 +4,8 @@ import json
 import sqlalchemy
 from flask import Blueprint, request, jsonify
 
-from api.challenge_app.app_factory import db
 from api.challenge_app.blueprints.utils import handle_csv, run_query
+from api.challenge_app.db_singleton import db
 from api.challenge_app.models.employee_model import Employee
 
 employees_bp = Blueprint('employees', __name__)
@@ -42,7 +42,15 @@ def update_employee():
     updated_employee = request.json
     try:
         employee_to_update = Employee.query.get(employee_id)
-        employee_to_update.employee = updated_employee.get('employee')
+        if updated_employee.get('name'):
+            employee_to_update.name = updated_employee.get('name')
+        if updated_employee.get('datetime'):
+            employee_to_update.name = updated_employee.get('datetime')
+        if updated_employee.get('department_id'):
+            employee_to_update.name = updated_employee.get('department_id')
+        if updated_employee.get('job_id'):
+            employee_to_update.name = updated_employee.get('job_id')
+
         db.session.commit()
         return jsonify('Employee updated successfully')
     except (sqlalchemy.orm.exc.UnmappedInstanceError, AttributeError) as e:
