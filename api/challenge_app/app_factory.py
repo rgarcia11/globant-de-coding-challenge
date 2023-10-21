@@ -1,4 +1,5 @@
 from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
 
 from api.challenge_app.blueprints.departments_bp import departments_bp
 from api.challenge_app.blueprints.employees_bp import employees_bp
@@ -15,7 +16,10 @@ def create_app(config_name="development"):
     else:
         raise ValueError("Invalid configuration name.")
     db.init_app(app)
+    return app
+
+
+def config_blueprints(app):
     app.register_blueprint(employees_bp)
     app.register_blueprint(departments_bp)
     app.register_blueprint(jobs_bp)
-    return app
