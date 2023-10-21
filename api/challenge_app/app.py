@@ -1,11 +1,13 @@
 # import sqlalchemy as sa
-# from flask_migrate import Migrate
+from flask_migrate import Migrate
 
-from api.challenge_app.app_factory import create_app  # , db
+from api.challenge_app.app_factory import create_app, config_blueprints
+from api.challenge_app.db_singleton import Base, db
+
 
 app = create_app(config_name='development')
-
-# Migrate(app, db)
+config_blueprints(app)
+migrate = Migrate(app, db)
 
 # Configure the database connection
 # engine = sa.create_engine(app.config['SQLALCHEMY_DATABASE_URI'])

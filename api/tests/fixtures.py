@@ -1,6 +1,6 @@
 import pytest
 
-from api.challenge_app.app_factory import db, create_app
+from api.challenge_app.app_factory import db, create_app, config_blueprints
 from api.challenge_app.models.department_model import Department
 from api.challenge_app.models.employee_model import Employee
 from api.challenge_app.models.job_model import Job
@@ -9,6 +9,7 @@ from api.challenge_app.models.job_model import Job
 @pytest.fixture(scope="function")
 def setup():
     app = create_app(config_name='test')
+    config_blueprints(app)
     yield app, db
 
 

@@ -12,6 +12,10 @@ WORKDIR /app
 COPY api/challenge_app/requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
 
+# Google auth
+COPY propane-avatar-402503-e0c583085a76.json /app/key.json
+ENV GOOGLE_APPLICATION_CREDENTIALS=/app/key.json
+
 # Copy the rest of the application's code to the container
 COPY . /app
 
