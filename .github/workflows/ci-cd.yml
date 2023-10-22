@@ -25,6 +25,14 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r api/challenge_app/requirements.txt
 
+    - name: Set up GCP Service Account Key
+      env:
+        SA_KEY: ${{ secrets.GCP_SA_KEY }}
+      run: echo "$SA_KEY" > sa_key.json
+
+    - name: Authenticate with GCP
+      run: gcloud auth activate-service-account --key-file=sa_key.json
+
     - name: Run tests
       run: |
         python -m pytest
