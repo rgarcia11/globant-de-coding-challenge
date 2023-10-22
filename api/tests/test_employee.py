@@ -1,7 +1,11 @@
+import io
+import os
 from datetime import datetime
 
 from .fixtures import setup, setup_employees
 from api.challenge_app.models.employee_model import Employee
+
+test_script_dir = os.path.dirname(os.path.abspath(__file__))
 
 
 def test_create_employee(setup_employees):
@@ -98,3 +102,31 @@ def test_delete_all_employees(setup_employees):
 
         response_json = response.get_json()
         assert response_json == []
+
+
+def test_upload_employees(setup_employees):
+    _, app = setup_employees
+    data_file = os.path.join(test_script_dir, "test_employee_data.csv")
+
+    with open(data_file, 'rb') as test_csv_file:
+        data = {
+            'csv_file':       (io.BytesIO(test_csv_file.read()), 'test.csv'),
+            'csv_header_row': True,
+            'batch_size':     10
+        }
+        with app.app_context():
+            client = app.test_client()
+            response = client.post('/employees/upload', data=data, content_type='multipart/form-data')
+            assert response.status_code == 200
+
+
+def test_employees_hired_by_quarter(setup_employees):
+    _, app = setup_employees
+    query_params = {
+        'year': '2021',
+    }
+
+    with app.app_context():
+        client = app.test_client()
+        response = client.get('/employees/hired_by_quarter', data=query_params)
+        assert response.status_code == 200
