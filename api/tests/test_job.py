@@ -1,7 +1,11 @@
+import io
+import os
 from datetime import datetime
 
 from .fixtures import setup, setup_jobs
 from api.challenge_app.models.job_model import Job
+
+test_script_dir = os.path.dirname(os.path.abspath(__file__))
 
 
 def test_create_job(setup_jobs):
@@ -90,3 +94,19 @@ def test_delete_all_jobs(setup_jobs):
 
         response_json = response.get_json()
         assert response_json == []
+
+
+def test_upload_jobs(setup_jobs):
+    _, app = setup_jobs
+    data_file = os.path.join(test_script_dir, "test_job_data.csv")
+
+    with open(data_file, 'rb') as test_csv_file:
+        data = {
+            'csv_file':       (io.BytesIO(test_csv_file.read()), 'test.csv'),
+            'csv_header_row': True,
+            'batch_size':     10
+        }
+        with app.app_context():
+            client = app.test_client()
+            response = client.post('/jobs/upload', data=data, content_type='multipart/form-data')
+            assert response.status_code == 200
