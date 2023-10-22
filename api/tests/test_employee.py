@@ -118,3 +118,15 @@ def test_upload_employees(setup_employees):
             client = app.test_client()
             response = client.post('/employees/upload', data=data, content_type='multipart/form-data')
             assert response.status_code == 200
+
+
+def test_employees_hired_by_quarter(setup_employees):
+    _, app = setup_employees
+    query_params = {
+        'year': '2021',
+    }
+
+    with app.app_context():
+        client = app.test_client()
+        response = client.get('/employees/hired_by_quarter', data=query_params)
+        assert response.status_code == 200

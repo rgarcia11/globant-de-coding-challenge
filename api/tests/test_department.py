@@ -109,3 +109,15 @@ def test_upload_department(setup_departments):
             client = app.test_client()
             response = client.post('/departments/upload', data=data, content_type='multipart/form-data')
             assert response.status_code == 200
+
+
+def test_departments_over_hiring_mean(setup_departments):
+    _, app = setup_departments
+    query_params = {
+        'year': '2021',
+    }
+
+    with app.app_context():
+        client = app.test_client()
+        response = client.get('/departments/over_hiring_mean', data=query_params)
+        assert response.status_code == 200
