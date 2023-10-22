@@ -1,7 +1,10 @@
-from datetime import datetime
+import io
+import os
 
 from .fixtures import setup, setup_departments
 from api.challenge_app.models.department_model import Department
+
+test_script_dir = os.path.dirname(os.path.abspath(__file__))
 
 
 def test_create_department(setup_departments):
@@ -90,3 +93,19 @@ def test_delete_all_departments(setup_departments):
 
         response_json = response.get_json()
         assert response_json == []
+
+
+def test_upload_department(setup_departments):
+    _, app = setup_departments
+    data_file = os.path.join(test_script_dir, "test_department_data.csv")
+
+    with open(data_file, 'rb') as test_csv_file:
+        data = {
+            'csv_file':       (io.BytesIO(test_csv_file.read()), 'test.csv'),
+            'csv_header_row': True,
+            'batch_size':     10
+        }
+        with app.app_context():
+            client = app.test_client()
+            response = client.post('/departments/upload', data=data, content_type='multipart/form-data')
+            assert response.status_code == 200
