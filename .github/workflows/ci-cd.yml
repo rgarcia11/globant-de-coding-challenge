@@ -25,7 +25,7 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r api/challenge_app/requirements.txt
 
-    - id: 'auth
+    - id: 'auth'
       name: 'Authenticate to Google Cloud'
       uses: 'google-github-actions/auth@v0'
       with:
