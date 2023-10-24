@@ -2,6 +2,7 @@ import json
 
 import sqlalchemy
 from flask import Blueprint, request, jsonify
+from flask_cors import cross_origin
 
 from api.challenge_app.blueprints.utils import handle_csv, run_query
 from api.challenge_app.db_singleton import db
@@ -10,6 +11,7 @@ from api.challenge_app.models.department_model import Department
 departments_bp = Blueprint('departments', __name__)
 
 
+@cross_origin()
 @departments_bp.route('/department', methods=['POST'])
 def create_department():
     new_department_json = request.json
@@ -19,12 +21,14 @@ def create_department():
     return jsonify('Department inserted successfully')
 
 
+@cross_origin()
 @departments_bp.route('/departments', methods=['GET'])
 def get_all_departments():
     departments = Department.query.all()
     return jsonify([department.to_dict() for department in departments])
 
 
+@cross_origin()
 @departments_bp.route('/department', methods=['GET'])
 def get_department():
     department_id = request.args.get("id")
@@ -35,6 +39,7 @@ def get_department():
         return jsonify(f'Could not find  department by id {department_id}')
 
 
+@cross_origin()
 @departments_bp.route('/department', methods=['PUT'])
 def update_department():
     department_id = request.args.get('id')
@@ -48,6 +53,7 @@ def update_department():
         return jsonify(f'Could not update the department. Full error: {e}')
 
 
+@cross_origin()
 @departments_bp.route('/department', methods=['DELETE'])
 def delete_department():
     department_id = request.args.get('id')
@@ -60,6 +66,7 @@ def delete_department():
         return jsonify(f'Could not find the department to delete. Full error: {e}')
 
 
+@cross_origin()
 @departments_bp.route('/departments', methods=['DELETE'])
 def delete_all_department():
     Department.query.delete()
@@ -67,6 +74,7 @@ def delete_all_department():
     return jsonify('All departments deleted successfully')
 
 
+@cross_origin()
 @departments_bp.route('/departments/upload', methods=['POST'])
 def upload_departments():
     file = request.files['csv_file']
@@ -81,6 +89,7 @@ def upload_departments():
     return jsonify(response)
 
 
+@cross_origin()
 @departments_bp.route('/departments/over_hiring_mean', methods=['GET'])
 def departments_over_hiring_mean():
     year = request.args.get("year")

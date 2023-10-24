@@ -1,5 +1,6 @@
 cloud-sql-python-connector==1.2.4
 Flask
+flask-cors
 Flask-Migrate
 Flask-SQLAlchemy
 pandas
